@@ -54,8 +54,9 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend ke liye
-    "https://your-frontend.com",  # Apne frontend ka URL yaha daal
-    "https://www.postman.com",  # Postman ke liye
+    "http://localhost:3000",  # Apne frontend ka URL yaha daal
+    "https://www.postman.com",
+      "http://127.0.0.1:5500",  # Postman ke liye
 ]
 
 CSRF_TRUSTED_ORIGINS = [

@@ -10,7 +10,6 @@ from rest_framework.response import Response
 def hello_world(request):
     return Response({"message": "Hello from Django API!"})
 
-
 def index(request):
     return render(request, 'index.html')
 
@@ -20,6 +19,11 @@ try:
 except Exception as e:
     print("Error loading dataset:", e)
 
+def normalize_symptom(symptom):
+    """Normalize a symptom by replacing underscores with spaces and converting to lowercase."""
+    if not isinstance(symptom, str):
+        return ""
+    return symptom.strip().lower().replace("_", " ")
 
 @csrf_exempt
 def get_diseases(request):
@@ -34,15 +38,25 @@ def get_diseases(request):
             if not symptoms:
                 return JsonResponse({"error": "No symptoms provided"}, status=400)
 
-            # 🔥 Format Fix: Input symptoms ko lowercase aur strip karke set me convert kar
-            symptoms = set([symptom.strip().lower() for symptom in symptoms])
+            # Normalize user-input symptoms (replace spaces with underscores to match dataset)
+            user_symptoms = set([normalize_symptom(symptom).replace(" ", "_") for symptom in symptoms])
 
             matched_diseases = []
             for _, row in dataset.iterrows():
-                # 🔥 Dataset ke symptoms ko bhi lowercase aur strip karke set me convert kar
-                disease_symptoms = set(str(symptom).strip().lower() for symptom in row[1:].values if str(symptom).strip())
+                # Normalize dataset symptoms (replace underscores with spaces for comparison)
+                disease_symptoms = set(
+                    normalize_symptom(str(symptom)).replace("_", " ") 
+                    for symptom in row[1:].values 
+                    if str(symptom).strip()
+                )
 
-                if symptoms.issubset(disease_symptoms):
+                # Convert user symptoms back to spaces for comparison
+                user_symptoms_for_comparison = set(
+                    normalize_symptom(s).replace("_", " ") 
+                    for s in user_symptoms
+                )
+
+                if user_symptoms_for_comparison.issubset(disease_symptoms):
                     matched_diseases.append(row["Disease"])
 
             if matched_diseases:

@@ -3,6 +3,12 @@ import pandas as pd
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def hello_world(request):
+    return Response({"message": "Hello from Django API!"})
 
 
 def index(request):

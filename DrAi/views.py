@@ -14,6 +14,7 @@ try:
 except Exception as e:
     print("Error loading dataset:", e)
 
+
 @csrf_exempt
 def get_diseases(request):
     if request.method == "GET":

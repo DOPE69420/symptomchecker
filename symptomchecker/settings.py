@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'DrAi',
+    'coreheaders',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React frontend ke liye
+    "https://your-frontend.com",  # Apne frontend ka URL yaha daal
+    "https://www.postman.com",  # Postman ke liye
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://symptomchecker-2.onrender.com",
+    "https://www.postman.com"
 ]
 
 ROOT_URLCONF = 'symptomchecker.urls'

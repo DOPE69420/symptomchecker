@@ -56,7 +56,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend ke liye
     "http://localhost:3000",  # Apne frontend ka URL yaha daal
     "https://www.postman.com",
-      "http://127.0.0.1:5500",  # Postman ke liye
+      "http://127.0.0.1:5500", 
+      "http://127.0.0.1:5501",
 ]
 
 CSRF_TRUSTED_ORIGINS = [

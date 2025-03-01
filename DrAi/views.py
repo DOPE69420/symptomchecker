@@ -5,6 +5,55 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import joblib
+import os
+import speech_recognition as sr
+
+MODEL_DIR = "ml_models"
+model = joblib.load(os.path.join(MODEL_DIR, "disease_model.pkl"))
+vectorizer = joblib.load(os.path.join(MODEL_DIR, "vectorizer.pkl"))
+
+@csrf_exempt
+def predict_disease(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            symptoms = " ".join(data.get("symptoms", []))  # List of symptoms -> String
+            
+            # ✅ Transform Input using Vectorizer
+            input_vector = vectorizer.transform([symptoms])
+
+            # ✅ Predict Disease
+            predicted_disease = model.predict(input_vector)[0]
+
+            return JsonResponse({"predicted_disease": predicted_disease})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"message": "Send a POST request with symptoms!"}, status=405)
+
+@csrf_exempt
+def voice_input(request):
+    if request.method == "POST":
+        try:
+            # ✅ Save the uploaded audio file
+            audio_file = request.FILES.get("audio")
+            if not audio_file:
+                return JsonResponse({"error": "No audio file provided"}, status=400)
+
+            # ✅ Convert audio to text using SpeechRecognition
+            recognizer = sr.Recognizer()
+            with sr.AudioFile(audio_file) as source:
+                audio_data = recognizer.record(source)
+                symptoms_text = recognizer.recognize_google(audio_data)
+
+            return JsonResponse({"recognized_symptoms": symptoms_text})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"message": "Send a POST request with an audio file!"}, status=405)
+
+
 
 @api_view(['GET'])
 def hello_world(request):

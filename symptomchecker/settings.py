@@ -64,7 +64,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://symptomchecker-2.onrender.com",
     "https://www.postman.com",
     "https://symptomchecker-sooty.vercel.app",
-]
+]# vercel used
 
 ROOT_URLCONF = 'symptomchecker.urls'
 import os

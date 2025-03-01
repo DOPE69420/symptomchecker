@@ -62,7 +62,8 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://symptomchecker-2.onrender.com",
-    "https://www.postman.com"
+    "https://www.postman.com",
+    "https://symptomchecker-sooty.vercel.app",
 ]
 
 ROOT_URLCONF = 'symptomchecker.urls'

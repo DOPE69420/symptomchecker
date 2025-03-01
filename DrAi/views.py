@@ -72,41 +72,69 @@ def get_diseases(request):
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+# from django.http import JsonResponse
+# import json
+
+# def predict_disease(request):
+#     if request.method == "POST":
+#         try:
+#             # Check if JSON is received
+#             data = json.loads(request.body)
+#             print("Received Data:", data)  # Debugging
+            
+#             symptoms = data.get("symptoms", "")
+#             print("Extracted Symptoms:", symptoms)  # Debugging
+            
+#             if not symptoms:
+#                 return JsonResponse({"error": "No symptoms provided"}, status=400)
+
+#             # 🔥 Debug: Ensure model is loaded properly
+#             global model
+#             if not model:
+#                 return JsonResponse({"error": "Model not loaded"}, status=500)
+
+#             # 🔥 Debug: Print what is being passed to the model
+#             print("Input to Model:", [symptoms])
+
+#             # Call ML Model Here
+#             prediction = model.predict([symptoms])  
+#             print("Model Output:", prediction)
+
+#             return JsonResponse({"prediction": prediction[0]})
+        
+#         except json.JSONDecodeError:
+#             return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+#         except Exception as e:
+#             print("Error Occurred:", str(e))  # Debugging
+#             return JsonResponse({"error": str(e)}, status=500)
+
+#     return JsonResponse({"error": "Invalid request method"}, status=400)
 from django.http import JsonResponse
 import json
+import joblib
+
+# Load ML model globally
+model = joblib.load("path/to/model.pkl")  
 
 def predict_disease(request):
     if request.method == "POST":
         try:
-            # Check if JSON is received
             data = json.loads(request.body)
-            print("Received Data:", data)  # Debugging
-            
-            symptoms = data.get("symptoms", "")
-            print("Extracted Symptoms:", symptoms)  # Debugging
-            
+            symptoms = data.get("symptoms", "").lower()  # Convert to lowercase for consistency
+            print("Received Symptoms:", symptoms)
+
             if not symptoms:
                 return JsonResponse({"error": "No symptoms provided"}, status=400)
 
-            # 🔥 Debug: Ensure model is loaded properly
-            global model
-            if not model:
-                return JsonResponse({"error": "Model not loaded"}, status=500)
-
-            # 🔥 Debug: Print what is being passed to the model
-            print("Input to Model:", [symptoms])
-
-            # Call ML Model Here
-            prediction = model.predict([symptoms])  
-            print("Model Output:", prediction)
+            # 🔥 Model Prediction
+            prediction = model.predict([symptoms])  # Ensure model supports text input
+            print("Model Prediction:", prediction)
 
             return JsonResponse({"prediction": prediction[0]})
-        
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON format"}, status=400)
 
         except Exception as e:
-            print("Error Occurred:", str(e))  # Debugging
+            print("Error:", str(e))
             return JsonResponse({"error": str(e)}, status=500)
 
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+    return JsonResponse({"error": "Invalid request"}, status=400)

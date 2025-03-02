@@ -215,4 +215,6 @@ def chat():
             else:
                 print("Bot: I'm here to help! Let me know how I can assist you further.")
                 break
+if __name__=="__main__":
+    chat()
 

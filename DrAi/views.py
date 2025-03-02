@@ -117,9 +117,23 @@ def get_diseases(request):
 #             return JsonResponse({"error": str(e)}, status=500)
 
 #     return JsonResponse({"error": "Invalid request method"}, status=400)
-from django.http import JsonResponse
-import json
 import joblib
+
+# Load the pre-trained model
+model = joblib.load('disease_model.pkl')
+
+def predict_disease(symptoms):
+    # Preprocess symptoms (e.g., converting to features the model can understand)
+    features = preprocess(symptoms)
+    
+    # Make the prediction
+    disease_prediction = model.predict([features])
+    
+    return disease_prediction[0]
+
+def preprocess(symptoms):
+    # This is a placeholder. You should preprocess the symptoms as per your trained model's requirements
+    return symptoms
 
   
 

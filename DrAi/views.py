@@ -137,3 +137,82 @@ def preprocess(symptoms):
 
   
 
+
+# Load the pre-trained model
+model = joblib.load('symptom_disease_model.pkl')
+
+def predict_disease(symptoms):
+    # Preprocess symptoms (e.g., converting to features the model can understand)
+    features = preprocess(symptoms)
+    
+    # Make the prediction
+    disease_prediction = model.predict([features])
+    
+    return disease_prediction[0]
+
+def preprocess(symptoms):
+    # This is a placeholder. You should preprocess the symptoms as per your trained model's requirements
+    return symptoms
+ 
+import openai
+
+
+openai.api_key = 'your-api-key-here'
+
+# Load the pre-trained model
+model = joblib.load('symptom_disease_model.pkl')
+
+def get_symptom_input():
+    print("Please describe your symptoms in detail.")
+    symptoms = input("You: ")
+    return symptoms
+
+def predict_disease(symptoms):
+    # Preprocess symptoms as per your model's requirements
+    features = preprocess(symptoms)
+    
+    # Make the prediction
+    disease_prediction = model.predict([features])
+    
+    return disease_prediction[0]
+
+def preprocess(symptoms):
+    # Assuming we have some preprocessing logic (e.g., feature extraction, encoding)
+    return symptoms  # Example placeholder
+
+def chat():
+    print("Hello! I'm your medical assistant. I can help you understand potential health conditions based on your symptoms.")
+    
+    while True:
+        symptoms = get_symptom_input()
+
+        if 'exit' in symptoms.lower():
+            print("Goodbye! Stay healthy.")
+            break
+        
+        # Step 1: Predict disease from the symptoms using your model
+        disease = predict_disease(symptoms)
+        
+        # Step 2: Ask follow-up questions (to make it conversational)
+        response = f"Based on your symptoms, I think you might be experiencing {disease}. "
+        response += "Would you like me to provide more details or assist with any further symptoms?"
+        
+        print(f"Bot: {response}")
+        
+        # Optional: Ask if the user wants more information or suggest seeing a doctor
+        while True:
+            follow_up = input("You: ").lower()
+            
+            if 'yes' in follow_up:
+                print("Bot: I recommend you visit a healthcare provider for an accurate diagnosis. Would you like me to suggest some clinics nearby?")
+                break
+            elif 'no' in follow_up:
+                print("Bot: Okay, take care! If you feel worse, don't hesitate to seek medical help.")
+                break
+            elif 'exit' in follow_up:
+                print("Goodbye! Take care!")
+                break
+            else:
+                print("Bot: I'm here to help! Let me know how I can assist you further.")
+                break
+

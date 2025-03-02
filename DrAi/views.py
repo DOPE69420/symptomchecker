@@ -120,7 +120,7 @@ def get_diseases(request):
 import joblib
 
 # Load the pre-trained model
-model = joblib.load('disease_model.pkl')
+model = joblib.load('ml_models/disease_model.pkl')
 
 def predict_disease(symptoms):
     # Preprocess symptoms (e.g., converting to features the model can understand)
